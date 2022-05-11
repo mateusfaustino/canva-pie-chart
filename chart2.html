@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="300px" height="300px"></canvas>
+</body>
+<script>
+    // requestAnimationFrame Shim
+(function() {
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                              window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+  window.requestAnimationFrame = requestAnimationFrame;
+})();
+
+
+function createSlice(color,initialAngle){
+    let canvas = document.getElementById('myCanvas');
+    let context = canvas.getContext('2d');
+    let x = canvas.width / 2;
+    let y = canvas.height / 2;
+    let radius = 75;
+    let endPercent = 90;
+    let curPerc = 0;
+    let counterClockwise = false;
+    let circ = (Math.PI * 2);
+    let quart = (Math.PI / 2);
+
+    context.lineWidth = 50;
+    context.strokeStyle = color;
+ 
+
+
+    function animate(current) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.beginPath();
+        context.arc(x, y, radius, (initialAngle*circ)/100, ((initialAngle*circ)/100)+(circ)*current, false);
+        context.stroke();
+        curPerc++;
+        if (curPerc <= endPercent) {
+            requestAnimationFrame(function () {
+                animate(curPerc / 100)
+            });
+        }
+    }
+
+ animate();
+}
+createSlice('#ad2323',75)
+</script>
+</html>
