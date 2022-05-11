@@ -7,8 +7,25 @@
     <title>Document</title>
 </head>
 <body>
-    <canvas id="myCanvas" width="300px" height="300px"></canvas>
+    <div class="conatiner">
+        <canvas id="myCanvas0" class="slice" width="300px" height="300px"></canvas>
+        <canvas id="myCanvas1" class="slice" width="300px" height="300px"></canvas>
+        <canvas id="myCanvas2" class="slice" width="300px" height="300px"></canvas>
+        <canvas id="myCanvas3" class="slice" width="300px" height="300px"></canvas>
+        <canvas id="myCanvas4" class="slice" width="300px" height="300px"></canvas>
+    </div>
 </body>
+<style>
+    .conatine{
+        position: relative;
+    }
+    .slice{
+        position: absolute;
+    }
+    .slice:hover{
+        
+    }
+</style>
 <script>
     // requestAnimationFrame Shim
 (function() {
@@ -18,13 +35,13 @@
 })();
 
 
-function createSlice(color,initialAngle){
-    let canvas = document.getElementById('myCanvas');
+function createSlice(color,initialAngle,percent,id){
+    let canvas = document.getElementById(id);
     let context = canvas.getContext('2d');
     let x = canvas.width / 2;
     let y = canvas.height / 2;
     let radius = 75;
-    let endPercent = 90;
+    let endPercent = percent;
     let curPerc = 0;
     let counterClockwise = false;
     let circ = (Math.PI * 2);
@@ -41,7 +58,7 @@ function createSlice(color,initialAngle){
         context.arc(x, y, radius, (initialAngle*circ)/100, ((initialAngle*circ)/100)+(circ)*current, false);
         context.stroke();
         curPerc++;
-        if (curPerc <= endPercent) {
+        if (curPerc <= endPercent+0.5) {
             requestAnimationFrame(function () {
                 animate(curPerc / 100)
             });
@@ -50,6 +67,30 @@ function createSlice(color,initialAngle){
 
  animate();
 }
-createSlice('#ad2323',75)
+const array = [1,1]
+const colors = ["red","green","blue","yellow","pink"]
+var sum = array.reduce(function(a, b){
+        return a + b;
+}, 0);
+let percentArray =[]
+array.forEach((value)=>{
+    percentArray.push(100*value/sum)
+})
+
+var sumArrayPercent = percentArray.reduce(function(a, b){
+        return a + b;
+}, 0);
+
+console.log("sumArrayPercent: ", sumArrayPercent);
+console.log("percentArray: ", percentArray);
+console.log("soma: ", sum);
+
+
+let amountPercent = 0
+percentArray.forEach((percent,index)=>{
+    console.log("i: ", index);
+    createSlice(colors[index] ,amountPercent ,percentArray[index],"myCanvas"+index)
+    amountPercent = amountPercent+percentArray[index]
+})
 </script>
 </html>
