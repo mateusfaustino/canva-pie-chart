@@ -8,19 +8,40 @@
 </head>
 <body>
     <div class="conatiner">
-        <canvas id="myCanvas0" class="slice" width="300px" height="300px"></canvas>
-        <canvas id="myCanvas1" class="slice" width="300px" height="300px"></canvas>
-        <canvas id="myCanvas2" class="slice" width="300px" height="300px"></canvas>
-        <canvas id="myCanvas3" class="slice" width="300px" height="300px"></canvas>
-        <canvas id="myCanvas4" class="slice" width="300px" height="300px"></canvas>
+        <canvas id="myCanvas0" class="slice" width="600" height="600"></canvas>
+        <canvas id="myCanvas1" class="slice" width="600" height="600"></canvas>
+        <canvas id="myCanvas2" class="slice" width="600" height="600"></canvas>
+        <canvas id="myCanvas3" class="slice" width="600" height="600"></canvas>
+        <canvas id="myCanvas4" class="slice" width="600" height="600"></canvas>
+        <canvas id="myCanvasPercent0" class="percent" width="600" height="600"></canvas>
+        <canvas id="myCanvasPercent1" class="percent" width="600" height="600"></canvas>
+        <canvas id="myCanvasPercent2" class="percent" width="600" height="600"></canvas>
+        <canvas id="myCanvasPercent3" class="percent" width="600" height="600"></canvas>
+        <canvas id="myCanvasPercent4" class="percent" width="600" height="600"></canvas>
+    </div>
+    <div class="legends">
+        <div class="legends__title">
+        </div>
+        <div class="legend"></div>
+        <div class="legend"></div>
+        <div class="legend"></div>
+        <div class="legend"></div>
+        <div class="legend"></div>
     </div>
 </body>
 <style>
     .conatine{
         position: relative;
+        width: 300px;
+        height: 300px;
     }
     .slice{
         position: absolute;
+       
+    }
+    .percent{
+        position: absolute;
+
     }
     .slice:hover{
         
@@ -34,9 +55,9 @@
   window.requestAnimationFrame = requestAnimationFrame;
 })();
 
-
-function createSlice(color,initialAngle,percent,id){
-    let canvas = document.getElementById(id);
+var step = 0;
+function createSlice(color,initialAngle,percent ,index){
+    let canvas = document.getElementById("myCanvas"+index);
     let context = canvas.getContext('2d');
     let x = canvas.width / 2;
     let y = canvas.height / 2;
@@ -51,7 +72,8 @@ function createSlice(color,initialAngle,percent,id){
     context.strokeStyle = color;
  
 
-
+    
+    
     function animate(current) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.beginPath();
@@ -61,19 +83,35 @@ function createSlice(color,initialAngle,percent,id){
         if (curPerc <= endPercent+0.5) {
             requestAnimationFrame(function () {
                 animate(curPerc / 100)
-            });
+            }
+            )
         }
     }
-
- animate();
+    
+    animate();
+    
 }
-const array = [1,1]
-const colors = ["red","green","blue","yellow","pink"]
-var sum = array.reduce(function(a, b){
+function makeLegend(index,color,initialPercent, percetage){
+    var canvas = document.getElementById("myCanvasPercent"+index);
+    var ctx = canvas.getContext("2d");
+    const circ = (Math.PI*2)
+    const angle = ((circ*initialPercent/100)+(circ*percetage/100)/2)
+    const x0 = (canvas.width/2)
+    const y0 = (canvas.height/2)
+    const radius = 75+50+8
+    ctx.font = "20px Roboto Sans MS";
+    ctx.fillStyle = color;
+    ctx.textAlign = "center";
+    ctx.fillText(percetage.toFixed(2).replace(".",",")+"%", x0+Math.cos(angle)*(radius), y0+Math.sin(angle)*(radius));
+}
+const values = [1,2,3,4,5]
+const colors = ['#f46036','#2e294e','#1b998b','#E71D36','#C5D86D',]
+labels = ["Ceará", "São Paulo", "Minas", "Tocantins", "Mato Grosso"]
+var sum = values.reduce(function(a, b){
         return a + b;
 }, 0);
 let percentArray =[]
-array.forEach((value)=>{
+values.forEach((value)=>{
     percentArray.push(100*value/sum)
 })
 
@@ -89,8 +127,11 @@ console.log("soma: ", sum);
 let amountPercent = 0
 percentArray.forEach((percent,index)=>{
     console.log("i: ", index);
-    createSlice(colors[index] ,amountPercent ,percentArray[index],"myCanvas"+index)
+    createSlice(colors[index] ,amountPercent ,percentArray[index],index)
+    makeLegend(index,colors[index],amountPercent,percentArray[index])
     amountPercent = amountPercent+percentArray[index]
 })
+
+
 </script>
 </html>
